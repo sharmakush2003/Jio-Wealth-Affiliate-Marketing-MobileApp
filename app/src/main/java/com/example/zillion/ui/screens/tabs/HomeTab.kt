@@ -60,15 +60,15 @@ fun HomeTab(
             .verticalScroll(rememberScrollState())
     ) {
         val topBarBrush = Brush.verticalGradient(
-            colors = listOf(ZillionGreen, Color(0xFF0F5132))
+            colors = listOf(Color(0xFF0F3BB1), Color(0xFF0A2570))
         )
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(topBarBrush)
-                .padding(bottom = 24.dp)
+                .padding(bottom = 16.dp)
         ) {
-            Column(modifier = Modifier.statusBarsPadding().padding(16.dp)) {
+            Column(modifier = Modifier.padding(top = 4.dp, start = 16.dp, end = 16.dp, bottom = 12.dp)) {
                 // Top Icon Bar
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -84,7 +84,7 @@ fun HomeTab(
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Hi! Rajesh",
+                        text = if (isLoggedIn) "Hi! Rajesh" else "Hi! Guest",
                         color = ZillionWhite,
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Bold
@@ -116,17 +116,17 @@ fun HomeTab(
                 
                 Spacer(modifier = Modifier.height(16.dp))
                 
-                // High-End Luxury Wallet Card
+                // High-End Luxury Wallet Card (Royal Blue themed to match Jio Wealth)
                 val cardBrush = Brush.linearGradient(
-                    colors = listOf(ZillionGreen, Color(0xFF0F764E), ZillionActionGreen)
+                    colors = listOf(Color(0xFF0C2461), Color(0xFF1E3799))
                 )
                 Card(
                     shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(containerColor = Color.Transparent),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(130.dp)
-                        .clickable { if (isLoggedIn) onItemClick(TransactionHistory) else onItemClick(Login) }
+                        .height(90.dp)
+                        .clickable { onItemClick(TransactionHistory) }
                         .border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(16.dp)),
                     elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
                 ) {
@@ -134,12 +134,12 @@ fun HomeTab(
                         modifier = Modifier
                             .fillMaxSize()
                             .background(cardBrush)
-                            .padding(20.dp)
+                            .padding(12.dp)
                     ) {
                         // Card Hologram / Logo watermarks
                         Box(
                             modifier = Modifier
-                                .size(36.dp)
+                                .size(24.dp)
                                 .background(ZillionWhite.copy(alpha = 0.15f), RoundedCornerShape(6.dp))
                                 .align(Alignment.TopEnd)
                         )
@@ -154,36 +154,36 @@ fun HomeTab(
                             ) {
                                 Text(
                                     text = "Coins Balance",
-                                    fontSize = 15.sp,
+                                    fontSize = 14.sp,
                                     fontWeight = FontWeight.Medium,
                                     color = ZillionWhite.copy(alpha = 0.8f)
                                 )
-                                Text(
-                                    text = "MEWAR DHANI",
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.ExtraBold,
-                                    color = ZillionGold,
-                                    letterSpacing = 1.5.sp
-                                )
+                                 Text(
+                                     text = "JIO WEALTH",
+                                     fontSize = 11.sp,
+                                     fontWeight = FontWeight.ExtraBold,
+                                     color = ZillionGold,
+                                     letterSpacing = 1.5.sp
+                                 )
                             }
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.Bottom
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Image(
-                                        painter = painterResource(id = R.drawable.app_logo),
-                                        contentDescription = "Mewar Dhani Logo",
-                                        modifier = Modifier
-                                            .size(28.dp)
-                                            .clip(RoundedCornerShape(6.dp)),
-                                        contentScale = ContentScale.Crop
-                                    )
+                                     Image(
+                                         painter = painterResource(id = R.drawable.app_logo),
+                                         contentDescription = "Jio Wealth Logo",
+                                         modifier = Modifier
+                                             .size(24.dp)
+                                             .clip(RoundedCornerShape(6.dp)),
+                                         contentScale = ContentScale.Crop
+                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text(
                                         text = "0",
-                                        fontSize = 32.sp,
+                                        fontSize = 24.sp,
                                         fontWeight = FontWeight.ExtraBold,
                                         color = ZillionWhite
                                     )
@@ -205,22 +205,6 @@ fun HomeTab(
         Spacer(modifier = Modifier.height(12.dp))
         PromoBannerSlider()
 
-        // Shop & Earn Coins Section
-        SectionHeader(title = "Shop & Earn Coins", onActionClick = { onItemClick(ShopEarnGrid) })
-        LazyRow(
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            val brands = listOf(
-                BrandEarnData("Amazon", "Upto 7", "per ₹100", Color(0xFFFF9900)),
-                BrandEarnData("Flipkart", "Upto 200", "per transaction", Color(0xFF2874F0)),
-                BrandEarnData("Myntra", "Upto 10", "per ₹100", Color(0xFFF15F22))
-            )
-            items(brands) { brand ->
-                BrandEarnCard(brand = brand, onClick = { onItemClick(ShopEarnGrid) })
-            }
-        }
-
         // Redeem coins on Section
         Spacer(modifier = Modifier.height(16.dp))
         Text(
@@ -240,7 +224,7 @@ fun HomeTab(
                 title = "Products",
                 badgeText = null,
                 icon = Icons.Default.ShoppingCart,
-                iconColor = Color(0xFF4CAF50),
+                gradient = Brush.verticalGradient(colors = listOf(Color(0xFF10B981), Color(0xFF047857))),
                 modifier = Modifier.weight(1f),
                 onClick = { onItemClick(Products) }
             )
@@ -248,7 +232,7 @@ fun HomeTab(
                 title = "Vouchers",
                 badgeText = null,
                 icon = Icons.Default.CardGiftcard,
-                iconColor = Color(0xFF2196F3),
+                gradient = Brush.verticalGradient(colors = listOf(Color(0xFF3B82F6), Color(0xFF1D4ED8))),
                 modifier = Modifier.weight(1f),
                 onClick = { onItemClick(Vouchers) }
             )
@@ -256,54 +240,115 @@ fun HomeTab(
                 title = "Utilities",
                 badgeText = "NEW",
                 icon = Icons.Default.ReceiptLong,
-                iconColor = Color(0xFFFF9800),
+                gradient = Brush.verticalGradient(colors = listOf(Color(0xFFF59E0B), Color(0xFFD97706))),
                 modifier = Modifier.weight(1f),
                 onClick = { onItemClick(HelpCenter) }
             )
         }
 
+        // Shop & Earn Coins Section
+        Spacer(modifier = Modifier.height(16.dp))
+        SectionHeader(title = "Shop & Earn Coins", onActionClick = { onItemClick(ShopEarnGrid) })
+        LazyRow(
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            val brands = listOf(
+                BrandEarnData("Amazon", "Upto 7", "per ₹100", Color(0xFFFF9900)),
+                BrandEarnData("Flipkart", "Upto 200", "per transaction", Color(0xFF2874F0)),
+                BrandEarnData("Myntra", "Upto 10", "per ₹100", Color(0xFFF15F22))
+            )
+            items(brands) { brand ->
+                BrandEarnCard(brand = brand, onClick = { onItemClick(ShopEarnGrid) })
+            }
+        }
+
+        // Loan Inquiry Section
+        Spacer(modifier = Modifier.height(16.dp))
+        SectionHeader(title = "Loan Inquiry", onActionClick = { onItemClick(HelpCenter) })
+        LazyRow(
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            val loanBrands = listOf(
+                BrandEarnData("SBI Loan", "8.4% Avg", "Home/Car Loan", Color(0xFF0054A6)),
+                BrandEarnData("PNB Loan", "8.7% Avg", "Personal Loan", Color(0xFF8F1E1D)),
+                BrandEarnData("HDFC Loan", "8.5% Avg", "All Loans", Color(0xFF1C3F94)),
+                BrandEarnData("ICICI Loan", "8.65% Avg", "Business Loan", Color(0xFFE26E26))
+            )
+            items(loanBrands) { brand ->
+                BrandEarnCard(
+                    brand = brand,
+                    onClick = {
+                        val colorHex = "#" + String.format("%08x", brand.colorAccent.value.toLong()).takeLast(8)
+                        onItemClick(InquiryDetails(brand.name, brand.rate, brand.label, colorHex))
+                    }
+                )
+            }
+        }
+
+        // Insurance Inquiry Section
+        Spacer(modifier = Modifier.height(16.dp))
+        SectionHeader(title = "Insurance Inquiry", onActionClick = { onItemClick(HelpCenter) })
+        LazyRow(
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            val insuranceBrands = listOf(
+                BrandEarnData("LIC", "Term Plan", "Best Premium", Color(0xFF00539B)),
+                BrandEarnData("HDFC Life", "Life Cover", "Upto ₹1 Crore", Color(0xFF003087)),
+                BrandEarnData("Sunlife", "Health Cover", "Critical Illness", Color(0xFFD32F2F)),
+                BrandEarnData("ICICI Pru", "Investment", "ULIP/Retirement", Color(0xFFE26E26))
+            )
+            items(insuranceBrands) { brand ->
+                BrandEarnCard(
+                    brand = brand,
+                    onClick = {
+                        val colorHex = "#" + String.format("%08x", brand.colorAccent.value.toLong()).takeLast(8)
+                        onItemClick(InquiryDetails(brand.name, brand.rate, brand.label, colorHex))
+                    }
+                )
+            }
+        }
+
+        // Credit Card Inquiry Section
+        Spacer(modifier = Modifier.height(16.dp))
+        SectionHeader(title = "Credit Card Inquiry", onActionClick = { onItemClick(HelpCenter) })
+        LazyRow(
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            val cardBrands = listOf(
+                BrandEarnData("HDFC Card", "Regalia Gold", "Premium Lounge", Color(0xFF1C3F94)),
+                BrandEarnData("SBI Card", "SimplyClick", "Upto 10x Rewards", Color(0xFF0054A6)),
+                BrandEarnData("ICICI Card", "Coral Card", "Fuel/Dining", Color(0xFFE26E26)),
+                BrandEarnData("Axis Card", "Neo Card", "10% Discount", Color(0xFF9E1F63))
+            )
+            items(cardBrands) { brand ->
+                BrandEarnCard(
+                    brand = brand,
+                    onClick = {
+                        val colorHex = "#" + String.format("%08x", brand.colorAccent.value.toLong()).takeLast(8)
+                        onItemClick(InquiryDetails(brand.name, brand.rate, brand.label, colorHex))
+                    }
+                )
+            }
+        }
+
         // Coupons Section
+        Spacer(modifier = Modifier.height(16.dp))
         SectionHeader(title = "Coupons", onActionClick = { onItemClick(Coupons) }, badgeText = "New")
         LazyRow(
             contentPadding = PaddingValues(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             val coupons = listOf(
-                CouponData("Bloom by Bold Care", Color(0xFFE8F5E9)),
-                CouponData("Bombay Shaving Co.", Color(0xFFECEFF1))
+                CouponData("Amazon Pay Gift Card", "Up to 10% Off", Color(0xFFFF9900)),
+                CouponData("Amazon Shopping Gift Card", "Flat ₹150 Off", Color(0xFFFF9900)),
+                CouponData("Flipkart Gift Card", "Flat 10% Off", Color(0xFF2874F0))
             )
             items(coupons) { coupon ->
                 CouponCard(coupon = coupon, onClick = { onItemClick(Coupons) })
-            }
-        }
-
-        // Popular Vouchers Section
-        SectionHeader(title = "Popular Vouchers", onActionClick = { onItemClick(Vouchers) })
-        LazyRow(
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            val popularVouchers = listOf(
-                VoucherData("amazon pay\ngift card", "Amazon", Color(0xFFFDF0E5)),
-                VoucherData("Flipkart", "Flipkart", Color(0xFFE3F2FD))
-            )
-            items(popularVouchers) { voucher ->
-                PopularVoucherCard(voucher = voucher, onClick = { onItemClick(Vouchers) })
-            }
-        }
-
-        // Top Products Section
-        SectionHeader(title = "Top Products to Redeem", onActionClick = { onItemClick(Products) })
-        LazyRow(
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            val products = listOf(
-                ProductData("Usha EI 2801 LT...", "3,798 coins", Color(0xFFEEEEEE)),
-                ProductData("High Speed Hand...", "9,321 coins", Color(0xFFEEEEEE))
-            )
-            items(products) { product ->
-                ProductCard(product = product, onClick = { onItemClick(Products) })
             }
         }
 
@@ -356,7 +401,7 @@ fun CoinIcon(size: androidx.compose.ui.unit.Dp, modifier: Modifier = Modifier) {
             center = center
         )
 
-        // Draw elegant golden star/spark in center representing Mewar Dhani rewards
+        // Draw elegant golden star/spark in center representing Jio Wealth rewards
         val innerRadius = radius * 0.45f
         val path = Path().apply {
             moveTo(center.x, center.y - innerRadius)
@@ -493,10 +538,13 @@ fun BrandEarnCard(brand: BrandEarnData, onClick: () -> Unit) {
                 .padding(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val logoRes = when (brand.name.lowercase()) {
-                "amazon" -> R.drawable.amazon_logo
-                "flipkart" -> R.drawable.flipkart_logo
-                "myntra" -> R.drawable.myntra_logo
+            val logoRes = when {
+                brand.name.lowercase().contains("amazon") -> R.drawable.amazon_logo
+                brand.name.lowercase().contains("flipkart") -> R.drawable.flipkart_logo
+                brand.name.lowercase().contains("myntra") -> R.drawable.myntra_logo
+                brand.name.lowercase().contains("sbi") -> R.drawable.sbi_logo
+                brand.name.lowercase().contains("pnb") -> R.drawable.pnb_logo
+                brand.name.lowercase().contains("hdfc") -> R.drawable.hdfc_logo
                 else -> null
             }
             Box(
@@ -537,38 +585,47 @@ fun RedeemCategoryCard(
     title: String,
     badgeText: String?,
     icon: androidx.compose.ui.graphics.vector.ImageVector,
-    iconColor: Color,
+    gradient: Brush,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = ZillionWhite),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         modifier = modifier.clickable(onClick = onClick),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(gradient)
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(vertical = 18.dp, horizontal = 12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(
                     modifier = Modifier
                         .size(40.dp)
-                        .background(iconColor.copy(alpha = 0.1f), CircleShape),
+                        .background(Color.White.copy(alpha = 0.25f), CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = icon,
                         contentDescription = title,
-                        tint = iconColor,
-                        modifier = Modifier.size(20.dp)
+                        tint = ZillionWhite,
+                        modifier = Modifier.size(22.dp)
                     )
                 }
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(text = title, fontSize = 13.sp, fontWeight = FontWeight.Bold, color = ZillionDark)
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(
+                    text = title,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = ZillionWhite
+                )
             }
             if (badgeText != null) {
                 Box(
@@ -587,7 +644,7 @@ fun RedeemCategoryCard(
     }
 }
 
-data class CouponData(val name: String, val bg: Color)
+data class CouponData(val name: String, val discount: String, val bg: Color)
 
 @Composable
 fun CouponCard(coupon: CouponData, onClick: () -> Unit) {
@@ -595,20 +652,26 @@ fun CouponCard(coupon: CouponData, onClick: () -> Unit) {
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = ZillionWhite),
         modifier = Modifier
-            .width(160.dp)
+            .width(130.dp)
             .clickable(onClick = onClick),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
-            modifier = Modifier.padding(12.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val logoRes = if (coupon.name.contains("Bombay", ignoreCase = true)) R.drawable.bombay_shaving_logo else null
+            val logoRes = when {
+                coupon.name.contains("Amazon", ignoreCase = true) -> R.drawable.amazon_logo
+                coupon.name.contains("Flipkart", ignoreCase = true) -> R.drawable.flipkart_logo
+                else -> null
+            }
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(90.dp)
+                    .size(48.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(if (logoRes == null) coupon.bg else Color.Transparent),
+                    .background(if (logoRes == null) coupon.bg.copy(alpha = 0.1f) else Color.Transparent),
                 contentAlignment = Alignment.Center
             ) {
                 if (logoRes != null) {
@@ -620,19 +683,29 @@ fun CouponCard(coupon: CouponData, onClick: () -> Unit) {
                     )
                 } else {
                     Text(
-                        text = coupon.name.take(1),
-                        color = ZillionGreen,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 32.sp
+                        text = coupon.name.take(2).uppercase(),
+                        color = coupon.bg,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 20.sp
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(12.dp))
             Text(
                 text = coupon.name,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 12.sp,
-                color = ZillionDark
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Bold,
+                color = ZillionDark,
+                maxLines = 1,
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = coupon.discount,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFFD32F2F),
+                textAlign = TextAlign.Center
             )
         }
     }

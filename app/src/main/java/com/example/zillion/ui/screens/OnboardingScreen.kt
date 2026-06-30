@@ -65,7 +65,7 @@ fun OnboardingScreen(
         ) {
             Image(
                 painter = painterResource(id = R.drawable.app_logo),
-                contentDescription = "Mewar Dhani Logo",
+                contentDescription = "Jio Wealth Logo",
                 modifier = Modifier
                     .size(36.dp)
                     .clip(RoundedCornerShape(8.dp)),
@@ -73,7 +73,7 @@ fun OnboardingScreen(
             )
             Spacer(modifier = Modifier.width(10.dp))
             Text(
-                text = "Mewar Dhani",
+                text = "Jio Wealth",
                 color = ZillionActionGreen,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,

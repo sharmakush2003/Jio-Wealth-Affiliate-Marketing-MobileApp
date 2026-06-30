@@ -29,6 +29,7 @@ import com.example.zillion.theme.*
 fun SignUpScreen(
     onSignUpSuccess: () -> Unit,
     onNavigateToLogin: () -> Unit,
+    onSkip: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var fullName by remember { mutableStateOf("") }
@@ -49,7 +50,7 @@ fun SignUpScreen(
         // App Logo
         Image(
             painter = painterResource(id = R.drawable.app_logo),
-            contentDescription = "Mewar Dhani Logo",
+            contentDescription = "Jio Wealth Logo",
             modifier = Modifier
                 .size(70.dp)
                 .clip(RoundedCornerShape(14.dp)),
@@ -63,7 +64,7 @@ fun SignUpScreen(
             fontWeight = FontWeight.ExtraBold
         )
         Text(
-            text = "Join Mewar Dhani affiliate rewards today",
+            text = "Join Jio Wealth affiliate rewards today",
             color = ZillionGray,
             fontSize = 13.sp,
             modifier = Modifier.padding(top = 4.dp)
@@ -175,6 +176,17 @@ fun SignUpScreen(
                 color = ZillionActionGreen,
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp
+            )
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        TextButton(onClick = onSkip) {
+            Text(
+                text = "Skip for Now",
+                color = ZillionGreen,
+                fontWeight = FontWeight.Bold,
+                fontSize = 15.sp
             )
         }
     }

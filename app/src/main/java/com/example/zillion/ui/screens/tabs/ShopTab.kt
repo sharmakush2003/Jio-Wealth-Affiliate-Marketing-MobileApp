@@ -13,6 +13,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.draw.clip
 import com.example.zillion.R
+import com.example.zillion.HelpCenter
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -78,7 +79,7 @@ fun ShopTab(
             modifier = Modifier.weight(1f)
         ) {
             items(shopEarnBrands) { brand ->
-                ShopBrandCard(brand = brand)
+                ShopBrandCard(brand = brand, onClick = { onItemClick(HelpCenter) })
             }
         }
     }
@@ -93,13 +94,14 @@ data class BrandShopData(
 )
 
 @Composable
-fun ShopBrandCard(brand: BrandShopData) {
+fun ShopBrandCard(brand: BrandShopData, onClick: () -> Unit) {
     Card(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = ZillionWhite),
         modifier = Modifier
             .fillMaxWidth()
-            .height(170.dp),
+            .height(170.dp)
+            .clickable(onClick = onClick),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {

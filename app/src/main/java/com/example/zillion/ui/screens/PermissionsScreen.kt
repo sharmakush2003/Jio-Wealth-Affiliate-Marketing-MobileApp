@@ -58,7 +58,7 @@ fun PermissionsScreen(
         ) {
             Image(
                 painter = painterResource(id = R.drawable.app_logo),
-                contentDescription = "Mewar Dhani Logo",
+                contentDescription = "Jio Wealth Logo",
                 modifier = Modifier
                     .size(24.dp)
                     .clip(RoundedCornerShape(4.dp)),
@@ -66,7 +66,7 @@ fun PermissionsScreen(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Mewar Dhani",
+                text = "Jio Wealth",
                 color = ZillionActionGreen,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
@@ -78,7 +78,7 @@ fun PermissionsScreen(
 
         // Title
         Text(
-            text = "Please allow below permissions to set up your Mewar Dhani account.",
+            text = "Please allow below permissions to set up your Jio Wealth account.",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = ZillionDark,

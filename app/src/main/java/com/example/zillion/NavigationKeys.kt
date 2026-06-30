@@ -23,3 +23,11 @@ import kotlinx.serialization.Serializable
 @Serializable data object ZillionCoinsFAQ : NavKey
 @Serializable data object RedemptionInfoFAQ : NavKey
 @Serializable data object DeleteAccountFAQ : NavKey
+@Serializable data object CreateTicket : NavKey
+@Serializable data class InquiryDetails(
+    val name: String,
+    val rate: String,
+    val label: String,
+    val accentColorHex: String
+) : NavKey
+

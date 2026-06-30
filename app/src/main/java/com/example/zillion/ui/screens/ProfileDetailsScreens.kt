@@ -68,32 +68,20 @@ fun AccountDetailsScreen(
                 elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
             ) {
                 Column(modifier = Modifier.padding(20.dp)) {
-                    // Mobile Number (Locked)
-                    ReadOnlyField(
-                        label = "Mobile Number",
-                        value = "8233816674",
-                        trailingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = ZillionGray) }
-                    )
+                    // Name
+                    ReadOnlyField(label = "Name", value = "Rajesh Sharma")
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    // Salutation
-                    ReadOnlyField(label = "Salutation", value = "Mr")
-                    Spacer(modifier = Modifier.height(20.dp))
-
-                    // First Name
-                    ReadOnlyField(label = "First name", value = "RAJESH")
-                    Spacer(modifier = Modifier.height(20.dp))
-
-                    // Last Name
-                    ReadOnlyField(label = "Last name", value = "SHARMA")
-                    Spacer(modifier = Modifier.height(20.dp))
-
-                    // Date of Birth
-                    ReadOnlyField(label = "Date of Birth (DD/MM/YYYY)", value = "12/09/1972")
+                    // Mobile Number
+                    ReadOnlyField(label = "Mobile Number", value = "8233816674")
                     Spacer(modifier = Modifier.height(20.dp))
 
                     // Email ID
-                    ReadOnlyField(label = "Email ID", value = "")
+                    ReadOnlyField(label = "Email ID", value = "rajesh.sharma@jiowealth.in")
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    // Jio Wealth ID
+                    ReadOnlyField(label = "Jio Wealth ID", value = "9401 1614 7488 3606")
                 }
             }
 

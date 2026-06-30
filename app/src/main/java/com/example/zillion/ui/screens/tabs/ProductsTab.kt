@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,6 +40,7 @@ fun ProductsTab(
     onItemClick: (NavKey) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var showBottomSheet by remember { mutableStateOf(false) }
     val products = listOf(
         ProductDetailData("Usha El 2801 LT...", "The ultra-lightweight...", "3,798 coins", Color(0xFFE0E0E0)),
         ProductDetailData("High Speed Hand...", "Hand mixers are powerf...", "9,321 coins", Color(0xFFCFD8DC)),
@@ -73,7 +75,7 @@ fun ProductsTab(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(ZillionLightGreen)
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                    .padding(horizontal = 16.dp, vertical = 6.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
@@ -146,7 +148,7 @@ fun ProductsTab(
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 24.dp)
                 .background(ZillionGreen, RoundedCornerShape(24.dp))
-                .clickable { /* Filter Action */ }
+                .clickable { showBottomSheet = true }
                 .padding(horizontal = 24.dp, vertical = 12.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -166,6 +168,61 @@ fun ProductsTab(
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp
                 )
+            }
+        }
+
+        if (showBottomSheet) {
+            ModalBottomSheet(
+                onDismissRequest = { showBottomSheet = false },
+                containerColor = ZillionWhite
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp)
+                        .navigationBarsPadding()
+                ) {
+                    Text(
+                        text = "Sort by",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = ZillionDark
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    val options = listOf("Popularity", "Coins: Low to High", "Coins: High to Low", "New Arrivals")
+                    var selectedOption by remember { mutableStateOf("Popularity") }
+
+                    options.forEach { option ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { selectedOption = option }
+                                .padding(vertical = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = (selectedOption == option),
+                                onClick = { selectedOption = option },
+                                colors = RadioButtonDefaults.colors(selectedColor = ZillionGreen)
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Text(text = option, fontSize = 16.sp, color = ZillionDark)
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Button(
+                        onClick = { showBottomSheet = false },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = ZillionGreen),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text("APPLY", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = ZillionWhite)
+                    }
+                }
             }
         }
     }

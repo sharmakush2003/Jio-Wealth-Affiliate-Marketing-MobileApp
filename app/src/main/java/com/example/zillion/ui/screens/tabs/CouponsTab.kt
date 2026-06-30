@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,13 +39,16 @@ fun CouponsTab(
     onItemClick: (NavKey) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var showBottomSheet by remember { mutableStateOf(false) }
     val coupons = listOf(
-        CouponGridData("Bloom by Bold Care", "0% Discount", Color(0xFFE8F5E9)),
-        CouponGridData("Bombay Shaving...", "0% Discount", Color(0xFFECEFF1)),
-        CouponGridData("Assembly Travel", "0% Discount", Color(0xFFE0F2F1)),
-        CouponGridData("Deyga Natural", "0% Discount", Color(0xFFFFF3E0)),
-        CouponGridData("Earth Rhythm", "0% Discount", Color(0xFFF1F8E9)),
-        CouponGridData("Vahdam Teas", "0% Discount", Color(0xFFE8EAF6))
+        CouponGridData("Amazon", "Up to 10% Off", Color(0xFFFFF3E0)),
+        CouponGridData("Flipkart", "Flat 15% Off", Color(0xFFE3F2FD)),
+        CouponGridData("Myntra", "Flat ₹200 Off", Color(0xFFFCE4EC)),
+        CouponGridData("Nykaa", "Flat 10% Off", Color(0xFFFCE4EC)),
+        CouponGridData("Zomato", "Flat 20% Off", Color(0xFFE3F2FD)),
+        CouponGridData("Cleartrip", "Flat 10% Off", Color(0xFFFFF3E0)),
+        CouponGridData("BookMyShow", "Flat 15% Off", Color(0xFFFCE4EC)),
+        CouponGridData("JioMart", "Flat ₹150 Off", Color(0xFFE3F2FD))
     )
 
     Box(
@@ -74,7 +78,7 @@ fun CouponsTab(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(ZillionLightGreen)
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                    .padding(horizontal = 16.dp, vertical = 6.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
@@ -99,7 +103,7 @@ fun CouponsTab(
             // Coupons Grid
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 80.dp),
+                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 80.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier.weight(1f)
@@ -116,7 +120,7 @@ fun CouponsTab(
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 24.dp)
                 .background(ZillionGreen, RoundedCornerShape(24.dp))
-                .clickable { }
+                .clickable { showBottomSheet = true }
                 .padding(horizontal = 24.dp, vertical = 12.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -136,6 +140,61 @@ fun CouponsTab(
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp
                 )
+            }
+        }
+
+        if (showBottomSheet) {
+            ModalBottomSheet(
+                onDismissRequest = { showBottomSheet = false },
+                containerColor = ZillionWhite
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp)
+                        .navigationBarsPadding()
+                ) {
+                    Text(
+                        text = "Sort by",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = ZillionDark
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    val options = listOf("Popularity", "Discount: Low to High", "Discount: High to Low", "New Arrivals")
+                    var selectedOption by remember { mutableStateOf("Popularity") }
+
+                    options.forEach { option ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { selectedOption = option }
+                                .padding(vertical = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = (selectedOption == option),
+                                onClick = { selectedOption = option },
+                                colors = RadioButtonDefaults.colors(selectedColor = ZillionGreen)
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Text(text = option, fontSize = 16.sp, color = ZillionDark)
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Button(
+                        onClick = { showBottomSheet = false },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = ZillionGreen),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text("APPLY", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = ZillionWhite)
+                    }
+                }
             }
         }
     }
@@ -167,7 +226,19 @@ fun CouponDetailCard(coupon: CouponGridData) {
                     .background(coupon.bgColor),
                 contentAlignment = Alignment.Center
             ) {
-                val logoRes = if (coupon.title.contains("Bombay", ignoreCase = true)) R.drawable.bombay_shaving_logo else null
+                val logoRes = when {
+                    coupon.title.contains("Amazon", ignoreCase = true) -> R.drawable.amazon_logo
+                    coupon.title.contains("Flipkart", ignoreCase = true) -> R.drawable.flipkart_logo
+                    coupon.title.contains("Myntra", ignoreCase = true) -> R.drawable.myntra_logo
+                    coupon.title.contains("Nykaa", ignoreCase = true) -> R.drawable.nykaa_logo
+                    coupon.title.contains("Ajio", ignoreCase = true) -> R.drawable.ajio_logo
+                    coupon.title.contains("Swiggy", ignoreCase = true) -> R.drawable.swiggy_logo
+                    coupon.title.contains("Zomato", ignoreCase = true) -> R.drawable.zomato_logo
+                    coupon.title.contains("Cleartrip", ignoreCase = true) -> R.drawable.cleartrip_logo
+                    coupon.title.contains("BookMyShow", ignoreCase = true) -> R.drawable.bookmyshow_logo
+                    coupon.title.contains("JioMart", ignoreCase = true) -> R.drawable.jiomart_logo
+                    else -> null
+                }
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center

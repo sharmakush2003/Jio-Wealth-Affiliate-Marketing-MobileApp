@@ -49,7 +49,6 @@ fun MainContainerScreen(
     onNavigate: (NavKey) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var selectedTab by remember { mutableStateOf(0) }
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -83,17 +82,19 @@ fun MainContainerScreen(
                         }
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
-                            text = "Rajesh Sharma",
+                            text = if (isLoggedIn) "Rajesh Sharma" else "Guest User",
                             color = ZillionWhite,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold
                         )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = "Mewar Dhani ID: 9401 1614 7488 3606",
-                            color = ZillionWhite.copy(alpha = 0.8f),
-                            fontSize = 13.sp
-                        )
+                        if (isLoggedIn) {
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = "Jio Wealth ID: 9401 1614 7488 3606",
+                                color = ZillionWhite.copy(alpha = 0.8f),
+                                fontSize = 13.sp
+                            )
+                        }
                     }
                 }
 
@@ -120,16 +121,7 @@ fun MainContainerScreen(
                     },
                     modifier = Modifier.padding(horizontal = 12.dp)
                 )
-                NavigationDrawerItem(
-                    label = { Text("Addresses", fontWeight = FontWeight.SemiBold) },
-                    selected = false,
-                    icon = { Icon(Icons.Default.Home, contentDescription = null) },
-                    onClick = {
-                        scope.launch { drawerState.close() }
-                        onNavigate(if (isLoggedIn) Addresses else Login)
-                    },
-                    modifier = Modifier.padding(horizontal = 12.dp)
-                )
+
                 NavigationDrawerItem(
                     label = { Text("Order History", fontWeight = FontWeight.SemiBold) },
                     selected = false,
@@ -181,107 +173,17 @@ fun MainContainerScreen(
         }
     ) {
         Scaffold(
-            bottomBar = {
-                // Custom floating glassmorphic bottom bar
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .navigationBarsPadding()
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                ) {
-                    Card(
-                        shape = RoundedCornerShape(24.dp),
-                        colors = CardDefaults.cardColors(containerColor = ZillionWhite),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(72.dp)
-                            .border(1.dp, ZillionGray.copy(alpha = 0.15f), RoundedCornerShape(24.dp)),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(horizontal = 8.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceAround
-                        ) {
-                            // Home Tab Button
-                            BottomBarItem(
-                                icon = Icons.Default.Home,
-                                label = "Home",
-                                isSelected = selectedTab == 0,
-                                onClick = { selectedTab = 0 }
-                            )
-
-                            // Shop Tab Button
-                            BottomBarItem(
-                                icon = Icons.Default.ShoppingCart,
-                                label = "Shop",
-                                isSelected = selectedTab == 1,
-                                onClick = { selectedTab = 1 }
-                            )
-
-                            // Middle SCAN & EARN custom green button
-                            Box(
-                                modifier = Modifier
-                                    .weight(1.3f)
-                                    .padding(horizontal = 4.dp)
-                                    .height(46.dp)
-                                    .background(
-                                        Brush.linearGradient(
-                                            colors = listOf(ZillionGreen, ZillionActionGreen)
-                                        ),
-                                        RoundedCornerShape(24.dp)
-                                    )
-                                    .clickable { selectedTab = 2 },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = "SCAN\n& EARN",
-                                    color = ZillionWhite,
-                                    fontSize = 10.sp,
-                                    fontWeight = FontWeight.ExtraBold,
-                                    lineHeight = 11.sp,
-                                    modifier = Modifier.padding(horizontal = 10.dp)
-                                )
-                            }
-
-                            // Spend Tab Button
-                            BottomBarItem(
-                                icon = Icons.Default.List,
-                                label = "Spend",
-                                isSelected = selectedTab == 3,
-                                onClick = { selectedTab = 3 }
-                            )
-
-                            // Coupons Tab Button
-                            BottomBarItem(
-                                icon = Icons.Default.Info, // ticket icon placeholder
-                                label = "Coupons",
-                                isSelected = selectedTab == 4,
-                                onClick = { selectedTab = 4 }
-                            )
-                        }
-                    }
-                }
-            }
         ) { paddingValues ->
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-                when (selectedTab) {
-                    0 -> HomeTab(
-                        isLoggedIn = isLoggedIn,
-                        onItemClick = onNavigate,
-                        onMenuClick = { scope.launch { drawerState.open() } }
-                    )
-                    1 -> ShopTab(onItemClick = onNavigate)
-                    2 -> ScanEarnPlaceholder(onClose = { selectedTab = 0 })
-                    3 -> SpendNavigationContainer(onItemClick = onNavigate)
-                    4 -> CouponsTab(onItemClick = onNavigate)
-                }
+                HomeTab(
+                    isLoggedIn = isLoggedIn,
+                    onItemClick = onNavigate,
+                    onMenuClick = { scope.launch { drawerState.open() } }
+                )
             }
         }
     }

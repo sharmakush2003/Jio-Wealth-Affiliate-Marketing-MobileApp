@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,15 +46,35 @@ fun ProfileScreen(
             .statusBarsPadding()
     ) {
         // Toolbar
-        TopAppBar(
-            title = { Text("Profile", fontWeight = FontWeight.Bold) },
-            navigationIcon = {
-                IconButton(onClick = { onItemClick(Main) }) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(containerColor = ZillionWhite)
+        val topBarBrush = Brush.verticalGradient(
+            colors = listOf(Color(0xFF0F3BB1), Color(0xFF0A2570))
         )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(topBarBrush)
+                .statusBarsPadding()
+                .padding(bottom = 8.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .padding(horizontal = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = { onItemClick(Main) }) {
+                    Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = ZillionWhite)
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Profile",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = ZillionWhite
+                )
+            }
+        }
 
         Column(
             modifier = Modifier
@@ -61,29 +82,77 @@ fun ProfileScreen(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // User Header Card (Dark Green, matching screenshot 1000043837)
+            // User Header Card (Luxury Membership style, matching Jio Wealth Elite)
+            val cardBrush = Brush.linearGradient(
+                colors = listOf(Color(0xFF0B2F8F), Color(0xFF051846))
+            )
             Card(
-                shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(containerColor = ZillionGreen),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.Transparent),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 24.dp)
+                    .border(1.5.dp, Color(0xFFF59E0B), RoundedCornerShape(16.dp)), // Gold border
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
             ) {
-                Column(
-                    modifier = Modifier.padding(20.dp)
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(cardBrush)
+                        .padding(20.dp)
                 ) {
-                    Text(
-                        text = "Rajesh Sharma",
-                        color = ZillionWhite,
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "Mewar Dhani ID: 9401 1614 7488 3606",
-                        color = ZillionWhite.copy(alpha = 0.8f),
-                        fontSize = 14.sp
-                    )
+                    Column {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Jio Wealth Elite",
+                                color = Color(0xFFF59E0B),
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 1.5.sp
+                            )
+                            // Small metallic chip vector drawing
+                            Box(
+                                modifier = Modifier
+                                    .size(32.dp, 24.dp)
+                                    .background(Color(0xFFFFEA7A), RoundedCornerShape(4.dp))
+                                    .border(1.dp, Color(0xFFB45309), RoundedCornerShape(4.dp))
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = "Rajesh Sharma",
+                            color = ZillionWhite,
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "Jio Wealth ID: 9401 1614 7488 3606",
+                            color = ZillionWhite.copy(alpha = 0.8f),
+                            fontSize = 13.sp,
+                            letterSpacing = 1.sp
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        HorizontalDivider(color = ZillionWhite.copy(alpha = 0.15f))
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column {
+                                Text("MEMBERSHIP", color = ZillionWhite.copy(alpha = 0.6f), fontSize = 9.sp)
+                                Text("PLATINUM", color = ZillionWhite, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                            }
+                            Column(horizontalAlignment = Alignment.End) {
+                                Text("VALID THRU", color = ZillionWhite.copy(alpha = 0.6f), fontSize = 9.sp)
+                                Text("12/30", color = ZillionWhite, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                            }
+                        }
+                    }
                 }
             }
 
@@ -109,12 +178,7 @@ fun ProfileScreen(
                     )
                     HorizontalDivider(color = ZillionLightGray, modifier = Modifier.padding(horizontal = 16.dp))
 
-                    ProfileMenuRow(
-                        icon = Icons.Default.Home,
-                        title = "Addresses",
-                        onClick = { onItemClick(Addresses) }
-                    )
-                    HorizontalDivider(color = ZillionLightGray, modifier = Modifier.padding(horizontal = 16.dp))
+
 
                     ProfileMenuRow(
                         icon = Icons.Default.ShoppingCart,
@@ -151,7 +215,7 @@ fun ProfileScreen(
                 }
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = "Mewar Dhani",
+                    text = "Jio Wealth",
                     color = ZillionActionGreen,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
@@ -172,16 +236,16 @@ fun ProfileScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // SIGN OUT button (white button with green border/text)
+            // SIGN OUT button (white button with blue border/text)
             Button(
                 onClick = { onItemClick(Login) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
-                    .border(1.dp, ZillionActionGreen, RoundedCornerShape(8.dp)),
+                    .border(1.dp, Color(0xFF0F3BB1), RoundedCornerShape(8.dp)),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = ZillionWhite,
-                    contentColor = ZillionActionGreen
+                    contentColor = Color(0xFF0F3BB1)
                 ),
                 shape = RoundedCornerShape(8.dp)
             ) {
@@ -208,7 +272,7 @@ fun ProfileMenuRow(
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = ZillionGreen,
+            tint = Color(0xFF0F3BB1),
             modifier = Modifier.size(22.dp)
         )
         Spacer(modifier = Modifier.width(16.dp))
@@ -222,7 +286,7 @@ fun ProfileMenuRow(
         Icon(
             imageVector = Icons.Default.KeyboardArrowRight,
             contentDescription = null,
-            tint = ZillionGreen,
+            tint = Color(0xFF0F3BB1),
             modifier = Modifier.size(24.dp)
         )
     }

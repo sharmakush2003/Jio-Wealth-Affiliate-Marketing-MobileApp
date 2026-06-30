@@ -29,6 +29,7 @@ import com.example.zillion.theme.*
 fun LoginScreen(
     onLoginSuccess: () -> Unit,
     onNavigateToSignUp: () -> Unit,
+    onSkip: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var emailOrMobile by remember { mutableStateOf("") }
@@ -47,7 +48,7 @@ fun LoginScreen(
         // App Logo
         Image(
             painter = painterResource(id = R.drawable.app_logo),
-            contentDescription = "Mewar Dhani Logo",
+            contentDescription = "Jio Wealth Logo",
             modifier = Modifier
                 .size(80.dp)
                 .clip(RoundedCornerShape(16.dp)),
@@ -55,7 +56,7 @@ fun LoginScreen(
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Mewar Dhani",
+            text = "Jio Wealth",
             color = ZillionGreen,
             fontSize = 28.sp,
             fontWeight = FontWeight.ExtraBold
@@ -146,6 +147,17 @@ fun LoginScreen(
                 color = ZillionActionGreen,
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp
+            )
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        TextButton(onClick = onSkip) {
+            Text(
+                text = "Skip for Now",
+                color = ZillionGreen,
+                fontWeight = FontWeight.Bold,
+                fontSize = 15.sp
             )
         }
     }

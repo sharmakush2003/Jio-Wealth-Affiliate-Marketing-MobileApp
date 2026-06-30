@@ -16,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -38,23 +39,43 @@ import com.example.zillion.theme.ZillionGold
 @Composable
 fun HelpCenterScreen(
     onItemClick: (NavKey) -> Unit,
+    onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(ZillionLightGray)
-            .statusBarsPadding()
     ) {
-        TopAppBar(
-            title = { Text("Help Center", fontWeight = FontWeight.Bold) },
-            navigationIcon = {
-                IconButton(onClick = { onItemClick(Profile) }) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(containerColor = ZillionWhite)
+        val topBarBrush = Brush.verticalGradient(
+            colors = listOf(Color(0xFF0F3BB1), Color(0xFF0A2570))
         )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(topBarBrush)
+                .statusBarsPadding()
+                .padding(bottom = 8.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .padding(horizontal = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = onBack) {
+                    Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = ZillionWhite)
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Help Center",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = ZillionWhite
+                )
+            }
+        }
 
         Column(
             modifier = Modifier
@@ -76,19 +97,22 @@ fun HelpCenterScreen(
                 elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
             ) {
                 Column {
-                    FAQCategoryRow(title = "About Mewar Dhani", onClick = { onItemClick(AboutZillionFAQ) })
+                    FAQCategoryRow(title = "About Jio Wealth", onClick = { onItemClick(AboutZillionFAQ) })
                     HorizontalDivider(color = ZillionLightGray, modifier = Modifier.padding(horizontal = 16.dp))
                     
                     FAQCategoryRow(title = "Account Information", onClick = { onItemClick(AccountInfoFAQ) })
                     HorizontalDivider(color = ZillionLightGray, modifier = Modifier.padding(horizontal = 16.dp))
                     
-                    FAQCategoryRow(title = "Mewar Dhani Coins", onClick = { onItemClick(ZillionCoinsFAQ) })
+                    FAQCategoryRow(title = "Jio Wealth Coins", onClick = { onItemClick(ZillionCoinsFAQ) })
                     HorizontalDivider(color = ZillionLightGray, modifier = Modifier.padding(horizontal = 16.dp))
                     
                     FAQCategoryRow(title = "Redemption Information", onClick = { onItemClick(RedemptionInfoFAQ) })
                     HorizontalDivider(color = ZillionLightGray, modifier = Modifier.padding(horizontal = 16.dp))
                     
                     FAQCategoryRow(title = "Delete Account", onClick = { onItemClick(DeleteAccountFAQ) })
+                    HorizontalDivider(color = ZillionLightGray, modifier = Modifier.padding(horizontal = 16.dp))
+                    
+                    FAQCategoryRow(title = "Create Ticket", onClick = { onItemClick(CreateTicket) })
                 }
             }
         }
@@ -258,7 +282,7 @@ fun DeleteAccountFAQScreen(
                         )
                         TimelineItem(
                             stepNumber = "2",
-                            description = "Mewar Dhani support team will check for any pending payments.",
+                            description = "Jio Wealth support team will check for any pending payments.",
                             isLast = false
                         )
                         TimelineItem(
