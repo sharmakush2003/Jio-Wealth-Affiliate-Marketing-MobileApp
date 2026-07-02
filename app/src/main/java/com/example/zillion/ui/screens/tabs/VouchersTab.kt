@@ -57,12 +57,7 @@ fun VouchersTab(
         Column(modifier = Modifier.fillMaxSize().statusBarsPadding()) {
             // Header Bar
             TopAppBar(
-                title = { Text("Vouchers", fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = { onItemClick(com.example.zillion.Main) }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                    }
-                },
+                title = { Text("Coins Cards", fontWeight = FontWeight.Bold) },
                 actions = {
                     IconButton(onClick = {}) {
                         Icon(Icons.Default.Search, contentDescription = "Search")

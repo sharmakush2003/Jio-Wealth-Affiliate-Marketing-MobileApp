@@ -140,6 +140,7 @@ fun ReadOnlyField(
 @Composable
 fun TransactionHistoryScreen(
     onBack: () -> Unit,
+    showBackButton: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     var selectedSection by remember { mutableStateOf(0) } // 0 = Coins, 1 = Cash
@@ -153,8 +154,10 @@ fun TransactionHistoryScreen(
         TopAppBar(
             title = { Text("Transaction History", fontWeight = FontWeight.Bold) },
             navigationIcon = {
-                IconButton(onClick = onBack) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                if (showBackButton) {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(containerColor = ZillionWhite)

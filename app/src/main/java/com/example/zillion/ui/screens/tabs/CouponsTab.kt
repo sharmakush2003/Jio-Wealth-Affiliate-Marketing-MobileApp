@@ -60,11 +60,6 @@ fun CouponsTab(
             // Header Bar
             TopAppBar(
                 title = { Text("Coupons", fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = { onItemClick(com.example.zillion.Main) }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                    }
-                },
                 actions = {
                     IconButton(onClick = {}) {
                         Icon(Icons.Default.Search, contentDescription = "Search")

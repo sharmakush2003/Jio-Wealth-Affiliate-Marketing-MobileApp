@@ -11,16 +11,31 @@ import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.filled.CardGiftcard
-import androidx.compose.material.icons.filled.ReceiptLong
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.HelpOutline
+import androidx.compose.material.icons.filled.PhoneAndroid
+import androidx.compose.material.icons.filled.AccountBalance
+import androidx.compose.material.icons.filled.SyncAlt
+import androidx.compose.material.icons.filled.AccountBalanceWallet
+import androidx.compose.material.icons.filled.Smartphone
+import androidx.compose.material.icons.filled.Tv
+import androidx.compose.material.icons.filled.Lightbulb
+import androidx.compose.material.icons.filled.CreditCard
+import androidx.compose.material.icons.filled.HomeWork
+import androidx.compose.material.icons.filled.MonetizationOn
+import androidx.compose.material.icons.filled.LocalFireDepartment
+import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -59,76 +74,258 @@ fun HomeTab(
             .background(ZillionLightGray)
             .verticalScroll(rememberScrollState())
     ) {
-        val topBarBrush = Brush.verticalGradient(
-            colors = listOf(Color(0xFF0F3BB1), Color(0xFF0A2570))
-        )
+        val scope = rememberCoroutineScope()
+        var showBalanceDialog by remember { mutableStateOf(false) }
+        var pinValue by remember { mutableStateOf("") }
+        var pinSubmitted by remember { mutableStateOf(false) }
+        var isCheckingBalance by remember { mutableStateOf(false) }
+
+
+        // UPI PIN / Balance Check Simulation
+        if (showBalanceDialog) {
+            AlertDialog(
+                onDismissRequest = {
+                    showBalanceDialog = false
+                    pinValue = ""
+                    pinSubmitted = false
+                },
+                title = {
+                    Text(
+                        text = if (pinSubmitted) "Account Balance" else "Enter UPI PIN",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp,
+                        color = ZillionDark
+                    )
+                },
+                text = {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        if (isCheckingBalance) {
+                            CircularProgressIndicator(color = ZillionGreen)
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Text("Fetching balance securely...", color = ZillionGray)
+                        } else if (pinSubmitted) {
+                            Icon(
+                                imageVector = Icons.Default.CheckCircle,
+                                contentDescription = "Success",
+                                tint = ZillionActionGreen,
+                                modifier = Modifier.size(48.dp)
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Text(
+                                text = "Jio Wealth Wallet Balance",
+                                fontSize = 14.sp,
+                                color = ZillionGray
+                            )
+                            Text(
+                                text = "2,450 Coins",
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                color = ZillionDark
+                            )
+                            Text(
+                                text = "Approx Value: ₹612.50",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = ZillionGreen
+                            )
+                        } else {
+                            Text(
+                                text = "Enter 4-digit UPI PIN to fetch balance for Jio Wealth account ending in 3606",
+                                fontSize = 13.sp,
+                                color = ZillionGray,
+                                textAlign = TextAlign.Center
+                            )
+                            Spacer(modifier = Modifier.height(20.dp))
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                            ) {
+                                repeat(4) { index ->
+                                    val char = pinValue.getOrNull(index)
+                                    Box(
+                                        modifier = Modifier
+                                            .size(40.dp)
+                                            .border(2.dp, ZillionGreen, RoundedCornerShape(8.dp)),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        if (char != null) {
+                                            Box(
+                                                modifier = Modifier
+                                                    .size(10.dp)
+                                                    .background(ZillionDark, CircleShape)
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                            Spacer(modifier = Modifier.height(20.dp))
+                            val rows = listOf(
+                                listOf("1", "2", "3"),
+                                listOf("4", "5", "6"),
+                                listOf("7", "8", "9"),
+                                listOf("Clear", "0", "OK")
+                            )
+                            Column(
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                rows.forEach { row ->
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        row.forEach { digit ->
+                                            Button(
+                                                onClick = {
+                                                    if (digit == "Clear") {
+                                                        pinValue = ""
+                                                    } else if (digit == "OK") {
+                                                        if (pinValue.length == 4) {
+                                                            scope.launch {
+                                                                isCheckingBalance = true
+                                                                delay(1500)
+                                                                isCheckingBalance = false
+                                                                pinSubmitted = true
+                                                            }
+                                                        }
+                                                    } else {
+                                                        if (pinValue.length < 4) {
+                                                            pinValue += digit
+                                                        }
+                                                    }
+                                                },
+                                                colors = ButtonDefaults.buttonColors(
+                                                    containerColor = if (digit == "OK") ZillionGreen else Color(0xFFF0F0F0),
+                                                    contentColor = if (digit == "OK") ZillionWhite else ZillionDark
+                                                ),
+                                                shape = RoundedCornerShape(8.dp),
+                                                modifier = Modifier.size(width = 68.dp, height = 40.dp),
+                                                contentPadding = PaddingValues(0.dp)
+                                            ) {
+                                                Text(digit, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                confirmButton = {
+                    if (pinSubmitted) {
+                        TextButton(
+                            onClick = {
+                                showBalanceDialog = false
+                                pinValue = ""
+                                pinSubmitted = false
+                            }
+                        ) {
+                            Text("DONE", color = ZillionGreen, fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
+            )
+        }
+
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(topBarBrush)
+                .background(ZillionGreen)
                 .padding(bottom = 16.dp)
         ) {
-            Column(modifier = Modifier.padding(top = 4.dp, start = 16.dp, end = 16.dp, bottom = 12.dp)) {
-                // Top Icon Bar
+            Column {
+                // PhonePe Styled Top Bar
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    IconButton(onClick = onMenuClick) {
+                    IconButton(
+                        onClick = onMenuClick,
+                        modifier = Modifier
+                            .size(40.dp)
+                            .background(Color.White.copy(alpha = 0.15f), CircleShape)
+                    ) {
                         Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = "Menu icon",
+                            imageVector = Icons.Default.AccountCircle,
+                            contentDescription = "Profile icon",
                             tint = ZillionWhite,
                             modifier = Modifier.size(28.dp)
                         )
                     }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = if (isLoggedIn) "Hi! Rajesh" else "Hi! Guest",
-                        color = ZillionWhite,
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = Modifier.width(12.dp))
                     
-                    Button(
-                        onClick = { if (isLoggedIn) {} else onItemClick(Login) },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = ZillionWhite.copy(alpha = 0.2f),
-                            contentColor = ZillionWhite
-                        ),
-                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
-                        shape = RoundedCornerShape(16.dp),
-                        modifier = Modifier.height(34.dp)
+                    Column(
+                        modifier = Modifier.weight(1f)
                     ) {
-                        Text("JOIN", fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Box(
-                            modifier = Modifier
-                                .size(18.dp)
-                                .background(ZillionGold, CircleShape),
-                            contentAlignment = Alignment.Center
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text("M", color = ZillionGreen, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold)
+                            Text(
+                                text = "Home",
+                                color = ZillionWhite,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Icon(
+                                imageVector = Icons.Default.ArrowDropDown,
+                                contentDescription = "Dropdown",
+                                tint = ZillionWhite,
+                                modifier = Modifier.size(16.dp)
+                            )
                         }
+                        Text(
+                            text = "Chittorgarh, Rajasthan",
+                            color = ZillionWhite.copy(alpha = 0.8f),
+                            fontSize = 11.sp,
+                            maxLines = 1
+                        )
+                    }
+                    
+                    IconButton(
+                        onClick = { /* Handle Notifications */ },
+                        modifier = Modifier.size(36.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Notifications,
+                            contentDescription = "Notifications",
+                            tint = ZillionWhite,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    IconButton(
+                        onClick = { onItemClick(HelpCenter) },
+                        modifier = Modifier.size(36.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.HelpOutline,
+                            contentDescription = "Help Support",
+                            tint = ZillionWhite,
+                            modifier = Modifier.size(24.dp)
+                        )
                     }
                 }
                 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(12.dp))
                 
-                // High-End Luxury Wallet Card (Royal Blue themed to match Jio Wealth)
+                // High-End Luxury Wallet Card (Purple themed to match PhonePe)
                 val cardBrush = Brush.linearGradient(
-                    colors = listOf(Color(0xFF0C2461), Color(0xFF1E3799))
+                    colors = listOf(Color(0xFF5F259F), Color(0xFF8338EC))
                 )
                 Card(
                     shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(containerColor = Color.Transparent),
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
                         .height(90.dp)
-                        .clickable { onItemClick(TransactionHistory) }
+                        .clickable { showBalanceDialog = true }
                         .border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(16.dp)),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                 ) {
                     Box(
                         modifier = Modifier
@@ -136,7 +333,6 @@ fun HomeTab(
                             .background(cardBrush)
                             .padding(12.dp)
                     ) {
-                        // Card Hologram / Logo watermarks
                         Box(
                             modifier = Modifier
                                 .size(24.dp)
@@ -182,14 +378,14 @@ fun HomeTab(
                                      )
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text(
-                                        text = "0",
+                                        text = "2,450",
                                         fontSize = 24.sp,
                                         fontWeight = FontWeight.ExtraBold,
                                         color = ZillionWhite
                                     )
                                 }
                                 Text(
-                                    text = "Value: ₹0.00",
+                                    text = "Value: ₹612.50",
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = ZillionWhite
@@ -201,50 +397,11 @@ fun HomeTab(
             }
         }
 
+
         // Banners Carousel
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         PromoBannerSlider()
 
-        // Redeem coins on Section
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Redeem coins on",
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-            color = ZillionDark,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-        )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            RedeemCategoryCard(
-                title = "Products",
-                badgeText = null,
-                icon = Icons.Default.ShoppingCart,
-                gradient = Brush.verticalGradient(colors = listOf(Color(0xFF10B981), Color(0xFF047857))),
-                modifier = Modifier.weight(1f),
-                onClick = { onItemClick(Products) }
-            )
-            RedeemCategoryCard(
-                title = "Vouchers",
-                badgeText = null,
-                icon = Icons.Default.CardGiftcard,
-                gradient = Brush.verticalGradient(colors = listOf(Color(0xFF3B82F6), Color(0xFF1D4ED8))),
-                modifier = Modifier.weight(1f),
-                onClick = { onItemClick(Vouchers) }
-            )
-            RedeemCategoryCard(
-                title = "Utilities",
-                badgeText = "NEW",
-                icon = Icons.Default.ReceiptLong,
-                gradient = Brush.verticalGradient(colors = listOf(Color(0xFFF59E0B), Color(0xFFD97706))),
-                modifier = Modifier.weight(1f),
-                onClick = { onItemClick(HelpCenter) }
-            )
-        }
 
         // Shop & Earn Coins Section
         Spacer(modifier = Modifier.height(16.dp))
@@ -580,69 +737,6 @@ fun BrandEarnCard(brand: BrandEarnData, onClick: () -> Unit) {
     }
 }
 
-@Composable
-fun RedeemCategoryCard(
-    title: String,
-    badgeText: String?,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    gradient: Brush,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-        modifier = modifier.clickable(onClick = onClick),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(gradient)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 18.dp, horizontal = 12.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .background(Color.White.copy(alpha = 0.25f), CircleShape),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = title,
-                        tint = ZillionWhite,
-                        modifier = Modifier.size(22.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.height(10.dp))
-                Text(
-                    text = title,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = ZillionWhite
-                )
-            }
-            if (badgeText != null) {
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .background(
-                            Color(0xFFFFC107),
-                            RoundedCornerShape(topStart = 0.dp, bottomStart = 8.dp, topEnd = 12.dp, bottomEnd = 0.dp)
-                        )
-                        .padding(horizontal = 6.dp, vertical = 2.dp)
-                ) {
-                    Text(badgeText, color = ZillionDark, fontSize = 9.sp, fontWeight = FontWeight.ExtraBold)
-                }
-            }
-        }
-    }
-}
 
 data class CouponData(val name: String, val discount: String, val bg: Color)
 
@@ -809,3 +903,42 @@ fun ProductCard(product: ProductData, onClick: () -> Unit) {
         }
     }
 }
+
+
+@Composable
+fun UtilityPayItem(
+    title: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    onClick: () -> Unit
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .clickable(onClick = onClick)
+            .width(72.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(48.dp)
+                .background(Color(0xFFF5F2F9), CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = title,
+                tint = ZillionGreen,
+                modifier = Modifier.size(24.dp)
+            )
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = title,
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Medium,
+            color = ZillionDark,
+            textAlign = TextAlign.Center,
+            lineHeight = 14.sp
+        )
+    }
+}
+

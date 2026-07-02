@@ -56,12 +56,7 @@ fun ProductsTab(
         Column(modifier = Modifier.fillMaxSize().statusBarsPadding()) {
             // Header Bar
             TopAppBar(
-                title = { Text("Products", fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = { onItemClick(com.example.zillion.Main) }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                    }
-                },
+                title = { Text("Wealth & Products", fontWeight = FontWeight.Bold) },
                 actions = {
                     IconButton(onClick = {}) {
                         Icon(Icons.Default.Search, contentDescription = "Search")

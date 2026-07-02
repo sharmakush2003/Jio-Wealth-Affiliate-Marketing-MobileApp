@@ -62,7 +62,7 @@ fun ShopTab(
         TopAppBar(
             title = {
                 Text(
-                    text = "Shop & Earn Coins",
+                    text = "Stores",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = ZillionDark

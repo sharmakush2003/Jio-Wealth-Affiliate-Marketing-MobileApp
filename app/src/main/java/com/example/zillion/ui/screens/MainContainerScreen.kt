@@ -10,12 +10,17 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.Redeem
+import androidx.compose.material.icons.filled.CardGiftcard
+import androidx.compose.material.icons.filled.Storefront
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -40,6 +45,7 @@ import com.example.zillion.theme.ZillionGreen
 import com.example.zillion.theme.ZillionGray
 import com.example.zillion.theme.ZillionLightGray
 import com.example.zillion.theme.ZillionWhite
+import com.example.zillion.theme.ZillionLightGreen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,6 +57,7 @@ fun MainContainerScreen(
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    var selectedTab by remember { mutableStateOf(0) }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -173,17 +180,104 @@ fun MainContainerScreen(
         }
     ) {
         Scaffold(
+            bottomBar = {
+                NavigationBar(
+                    containerColor = ZillionWhite,
+                    tonalElevation = 8.dp
+                ) {
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
+                        label = { Text("Home", fontSize = 11.sp) },
+                        selected = selectedTab == 0,
+                        onClick = { selectedTab = 0 },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = ZillionGreen,
+                            selectedTextColor = ZillionGreen,
+                            unselectedIconColor = ZillionGray,
+                            unselectedTextColor = ZillionGray,
+                            indicatorColor = ZillionLightGreen
+                        )
+                    )
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Default.Redeem, contentDescription = "Coupons") },
+                        label = { Text("Coupons", fontSize = 11.sp) },
+                        selected = selectedTab == 1,
+                        onClick = { selectedTab = 1 },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = ZillionGreen,
+                            selectedTextColor = ZillionGreen,
+                            unselectedIconColor = ZillionGray,
+                            unselectedTextColor = ZillionGray,
+                            indicatorColor = ZillionLightGreen
+                        )
+                    )
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Default.Storefront, contentDescription = "Stores") },
+                        label = { Text("Stores", fontSize = 11.sp) },
+                        selected = selectedTab == 2,
+                        onClick = { selectedTab = 2 },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = ZillionGreen,
+                            selectedTextColor = ZillionGreen,
+                            unselectedIconColor = ZillionGray,
+                            unselectedTextColor = ZillionGray,
+                            indicatorColor = ZillionLightGreen
+                        )
+                    )
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Default.CardGiftcard, contentDescription = "Coins Cards") },
+                        label = { Text("Coins Cards", fontSize = 11.sp) },
+                        selected = selectedTab == 3,
+                        onClick = { selectedTab = 3 },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = ZillionGreen,
+                            selectedTextColor = ZillionGreen,
+                            unselectedIconColor = ZillionGray,
+                            unselectedTextColor = ZillionGray,
+                            indicatorColor = ZillionLightGreen
+                        )
+                    )
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Default.History, contentDescription = "History") },
+                        label = { Text("History", fontSize = 11.sp) },
+                        selected = selectedTab == 4,
+                        onClick = { selectedTab = 4 },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = ZillionGreen,
+                            selectedTextColor = ZillionGreen,
+                            unselectedIconColor = ZillionGray,
+                            unselectedTextColor = ZillionGray,
+                            indicatorColor = ZillionLightGreen
+                        )
+                    )
+                }
+            }
         ) { paddingValues ->
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-                HomeTab(
-                    isLoggedIn = isLoggedIn,
-                    onItemClick = onNavigate,
-                    onMenuClick = { scope.launch { drawerState.open() } }
-                )
+                when (selectedTab) {
+                    0 -> HomeTab(
+                        isLoggedIn = isLoggedIn,
+                        onItemClick = onNavigate,
+                        onMenuClick = { scope.launch { drawerState.open() } }
+                    )
+                    1 -> CouponsTab(
+                        onItemClick = onNavigate
+                    )
+                    2 -> ShopTab(
+                        onItemClick = onNavigate
+                    )
+                    3 -> VouchersTab(
+                        onItemClick = onNavigate
+                    )
+                    4 -> TransactionHistoryScreen(
+                        onBack = {},
+                        showBackButton = false
+                    )
+                }
             }
         }
     }
